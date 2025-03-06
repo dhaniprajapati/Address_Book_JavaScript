@@ -1,4 +1,4 @@
-//UC10- get number of contact persons i.e count by city or state
+//UC12- sort by city or state
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -65,6 +65,16 @@ class AddressBook {
             console.log("Contact not found.");
         }
     }
+    //delete contact
+    deleteContact(firstName, lastName) {
+        const contact = this.findContactByName(firstName, lastName);
+        if (contact) {
+            this.contacts = this.contacts.filter(c => c !== contact);
+            console.log("Contact deleted successfully.");
+        } else {
+            console.log("Contact not found.");
+        }
+    }
     //to find contact by city or state
     findContactByCity(city) {
         return this.contacts.filter(contact => contact.city === city);
@@ -84,6 +94,40 @@ class AddressBook {
             if (contact1.firstName > contact2.firstName) {
                 return 1;
             } else if (contact1.firstName < contact2.firstName) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
+    //sort contacts by city, state or zip
+    sortContactsByCity() {
+        this.contacts.sort((contact1, contact2) => {
+            if (contact1.city > contact2.city) {
+                return 1;
+            } else if (contact1.city < contact2.city) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
+    sortContactsByState() {
+        this.contacts.sort((contact1, contact2) => {
+            if (contact1.state > contact2.state) {
+                return 1;
+            } else if (contact1.state < contact2.state) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
+    sortContactsByZip() {
+        this.contacts.sort((contact1, contact2) => {
+            if (contact1.zip > contact2.zip) {
+                return 1;
+            } else if (contact1.zip < contact2.zip) {
                 return -1;
             } else {
                 return 0;
@@ -181,12 +225,12 @@ try {
 
     //add contacts to personal address book
     const personalBook = manager.getAddressBook("Personal");
-    const contact1 = new Contact("Rahul", "Kumar", "Lalpur", "Ranchi", "Jharkhand", "800020", "1234567890", "rahul@gmail.com");
+    const contact1 = new Contact("Rahul", "Kumar", "Lalpur", "Ranchi", "Jharkhand", "871234", "1234567890", "rahul@gmail.com");
     const contact2 = new Contact("Rohit", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "6734892109", "rohit@gmail.com");
 
     const workBook = manager.getAddressBook("Work");
-    const contact3 = new Contact("Shreya", "Kumari", "Lalpur", "Ranchi", "Jharkhand", "800020", "7568320748", "shreya@gmail.com");
-    const contact4 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
+    const contact3 = new Contact("Shreya", "Kumari", "Lalpur", "Ranchi", "Jharkhand", "871234", "7568320748", "shreya@gmail.com");
+    const contact4 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "5675868789", "rishi@gmail.com");
     const contact5 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
 
     personalBook.addContact(contact1);
@@ -195,7 +239,10 @@ try {
     workBook.addContact(contact3);
     workBook.addContact(contact4);
     workBook.addContact(contact5);
-   //group by city 
+    //delete contact by name
+    personalBook.deleteContact("Rohit", "Kumar");
+    console.log("----------------------------------------------------");
+    //group by city 
     const contactsByCity = personalBook.contacts.reduce((contacts, contact) => {
         const city = contact.city;
         if (!contacts[city]) {
@@ -205,11 +252,11 @@ try {
         return contacts;
     }, {});
     console.log("Contacts grouped by city:", contactsByCity);
-
+    console.log("----------------------------------------------------");
     //get total number of contacts grouped by city
     const totalContactsByCity = Object.values(contactsByCity).reduce((total, contactArray) => total + contactArray.length, 0);
     console.log("Total contacts grouped by city:", totalContactsByCity);
-
+    console.log("----------------------------------------------------");
     //group by state
     const contactsByState = personalBook.contacts.reduce((contacts, contact) => {
         const state = contact.state;
@@ -220,27 +267,27 @@ try {
         return contacts;
     }, {});
     console.log("Contacts grouped by state:", contactsByState);
-    
+    console.log("----------------------------------------------------");
     //get total number of contacts
     const totalContactsByState = Object.values(contactsByState).reduce((total, contactArray) => total + contactArray.length, 0);
     console.log("Total contacts grouped by state:", totalContactsByState);
-
-
+    console.log("----------------------------------------------------");
     //view contacts by location
     const contactsByLocation = personalBook.viewContacts("Ranchi");
     console.log("Contacts in Ranchi:", contactsByLocation);
-
+    console.log("----------------------------------------------------");
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
-
+    console.log("----------------------------------------------------");
     //reduce function to get total number of contacts
     const totalContactsPersonal = personalBook.contacts.reduce((total, contact) => total + 1, 0);
     console.log("Total contacts in Personal Address Book:", totalContactsPersonal);
 
     const totalContactsWork = workBook.contacts.reduce((total, contact) => total + 1, 0);
     console.log("Total contacts in Work Address Book:", totalContactsWork);
-    console.log("Total number of contacts in address book:", totalContactsPersonal + totalContactsWork);
 
+    console.log("Total number of contacts in address book:", totalContactsPersonal + totalContactsWork);
+    console.log("----------------------------------------------------");
     //find contact by name if exists
     const updatedContact = personalBook.findContactByName("Rahul", "Kumar");
     if (updatedContact) {
@@ -248,12 +295,40 @@ try {
     } else {
         console.log("Contact not found for updating.");
     }
+    console.log("----------------------------------------------------");
     //sort contacts by name
     personalBook.sortContactsByName();
     console.log("Sorted Personal Address Book Contacts:");
     personalBook.displayContacts();
     workBook.sortContactsByName();
     console.log("Sorted Work Address Book Contacts:");
+    workBook.displayContacts();
+    console.log("----------------------------------------------------");
+    //sort contacts by city
+    personalBook.sortContactsByCity();
+    console.log("Sorted Personal Address Book Contacts by City:");
+    personalBook.displayContacts();
+    console.log("----------------------------------------------------");
+    workBook.sortContactsByCity();
+    console.log("Sorted Work Address Book Contacts by City:");
+    workBook.displayContacts();
+    console.log("----------------------------------------------------");
+    //sort contacts by state
+    personalBook.sortContactsByState();
+    console.log("Sorted Personal Address Book Contacts by State:");
+    personalBook.displayContacts();
+    console.log("----------------------------------------------------");
+    workBook.sortContactsByState();
+    console.log("Sorted Work Address Book Contacts by State:");
+    workBook.displayContacts();
+    console.log("----------------------------------------------------");
+    //sort contacts by zip
+    personalBook.sortContactsByZip();
+    console.log("Sorted Personal Address Book Contacts by Zip:");
+    personalBook.displayContacts();
+    console.log("----------------------------------------------------");
+    workBook.sortContactsByZip();
+    console.log("Sorted Work Address Book Contacts by Zip:");
     workBook.displayContacts();
 } catch (error) {
     console.error(error.message);
