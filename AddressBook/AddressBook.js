@@ -11,6 +11,10 @@ class Contact {
       this.phoneNumber = phoneNumber;
       this.email = email;
     }
+    //override toString method
+    toString() {
+      return "First Name: " + this.firstName + " Last Name: " + this.lastName + " Address: " + this.address + " City: " + this.city + " State: " + this.state + " Zip: " + this.zip + " Phone Number: " + this.phoneNumber + " Email: " + this.email;
+    }
 }
 //address book class
 class AddressBook {
@@ -73,6 +77,18 @@ class AddressBook {
         const contactsByCity = this.findContactByCity(location);
         const contactsByState = this.findContactByState(location);
         return contactsByCity.concat(contactsByState);
+    }
+    //sort contacts by name
+    sortContactsByName() {
+        this.contacts.sort((contact1, contact2) => {
+            if (contact1.firstName > contact2.firstName) {
+                return 1;
+            } else if (contact1.firstName < contact2.firstName) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
     }
     //display contacts
     displayContacts() {
@@ -163,8 +179,6 @@ try {
     manager.createAddressBook("Personal");
     manager.createAddressBook("Work");
 
-    manager.listAddressBooks();
-
     //add contacts to personal address book
     const personalBook = manager.getAddressBook("Personal");
     const contact1 = new Contact("Rahul", "Kumar", "Lalpur", "Ranchi", "Jharkhand", "800020", "1234567890", "rahul@gmail.com");
@@ -219,9 +233,6 @@ try {
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
 
-    //display contacts
-    personalBook.displayContacts();
-
     //reduce function to get total number of contacts
     const totalContactsPersonal = personalBook.contacts.reduce((total, contact) => total + 1, 0);
     console.log("Total contacts in Personal Address Book:", totalContactsPersonal);
@@ -237,6 +248,13 @@ try {
     } else {
         console.log("Contact not found for updating.");
     }
+    //sort contacts by name
+    personalBook.sortContactsByName();
+    console.log("Sorted Personal Address Book Contacts:");
+    personalBook.displayContacts();
+    workBook.sortContactsByName();
+    console.log("Sorted Work Address Book Contacts:");
+    workBook.displayContacts();
 } catch (error) {
     console.error(error.message);
 }
