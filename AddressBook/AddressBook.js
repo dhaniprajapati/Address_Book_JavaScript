@@ -1,4 +1,4 @@
-//UC8- to search person using city or state
+//UC9- to view specific contacts in city or state
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -65,9 +65,14 @@ class AddressBook {
     findContactByCity(city) {
         return this.contacts.filter(contact => contact.city === city);
     }
-
+    //view contacts by state
     findContactByState(state) {
         return this.contacts.filter(contact => contact.state === state);
+    }
+    viewContacts(location) {
+        const contactsByCity = this.findContactByCity(location);
+        const contactsByState = this.findContactByState(location);
+        return contactsByCity.concat(contactsByState);
     }
     //display contacts
     displayContacts() {
@@ -179,9 +184,15 @@ try {
     //search contact by city or state
     const cityContacts = personalBook.contacts.filter(contact => contact.city === "Patna");
     const stateContacts = personalBook.contacts.filter(contact => contact.state === "Bihar");
-    
-    console.log("Contacts in Patna:", cityContacts);
-    console.log("Contacts in Bihar:", stateContacts);
+    console.log("Detailed Contacts in Patna:");
+    cityContacts.forEach(contact => {
+        console.log("Name:"+contact.firstName + " " + contact.lastName);
+    });
+
+    console.log("Detailed Contacts in Bihar:");
+    stateContacts.forEach(contact => {
+        console.log("Name:"+contact.firstName + " " + contact.lastName);
+    });
 
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
