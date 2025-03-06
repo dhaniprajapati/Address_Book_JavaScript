@@ -1,4 +1,4 @@
-//UC5- to find total number of contacts in address book
+//UC7- to find duplicate contact and remove it
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -21,6 +21,13 @@ class AddressBook {
     //add contact
     addContact(contact) {
         console.log("Contact details received:", contact);
+        //check for duplicate contact
+        const existingContact = this.findContactByName(contact.firstName, contact.lastName);
+        if (existingContact) {
+            console.log("Contact already exists.");
+            return;
+        }
+        //validate contact details
         if (
             validateFirstName(contact.firstName) &&
             validateLastName(contact.lastName) &&
@@ -153,13 +160,23 @@ try {
     const workBook = manager.getAddressBook("Work");
     const contact3 = new Contact("Shreya", "Kumari", "Kankarbagh", "Patna", "Bihar", "800020", "7568320748", "shreya@gmail.com");
     const contact4 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
+    const contact5 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
 
     personalBook.addContact(contact1);
     personalBook.addContact(contact2);
 
     workBook.addContact(contact3);
     workBook.addContact(contact4);
+    workBook.addContact(contact5);
 
+    //remove duplicate contact
+    existingContact = workBook.findContactByName("Rishi", "Kumar");
+    if (existingContact) {
+        workBook.contacts.pop(existingContact);
+        console.log("Removed duplicate contact: Rishi Kumar");
+    } else {
+        console.log("No duplicate contact found for Rishi Kumar");
+    }
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
 
