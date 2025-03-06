@@ -1,4 +1,4 @@
-//UC4- to find existing contact person using their name and delete it from the array
+//UC5- to find total number of contacts in address book
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -50,19 +50,6 @@ class AddressBook {
         if (contact) {
             Object.assign(contact, updatedDetails);
             console.log("Contact updated successfully.");
-        } else {
-            console.log("Contact not found.");
-        }
-    }
-    //delete contact
-    deleteContact(firstName, lastName) {
-        const contact = this.findContactByName(firstName, lastName);
-        if (contact) {
-            this.contacts = this.contacts.filter(contact => 
-                contact.firstName !== firstName &&
-                contact.lastName !== lastName
-            );
-            console.log("Contact deleted successfully.");
         } else {
             console.log("Contact not found.");
         }
@@ -155,29 +142,44 @@ try {
     //create address books and add contacts
     manager.createAddressBook("Personal");
     manager.createAddressBook("Work");
+
     manager.listAddressBooks();
+
     //add contacts to personal address book
     const personalBook = manager.getAddressBook("Personal");
     const contact1 = new Contact("Rahul", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rahul@gmail.com");
     const contact2 = new Contact("Rohit", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "6734892109", "rohit@gmail.com");
+
+    const workBook = manager.getAddressBook("Work");
+    const contact3 = new Contact("Shreya", "Kumari", "Kankarbagh", "Patna", "Bihar", "800020", "7568320748", "shreya@gmail.com");
+    const contact4 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
+
     personalBook.addContact(contact1);
     personalBook.addContact(contact2);
+
+    workBook.addContact(contact3);
+    workBook.addContact(contact4);
+
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
-    //delete contact
-    personalBook.deleteContact("Rohit", "Kumar");
+
     //display contacts
     personalBook.displayContacts();
+
+    //reduce function to get total number of contacts
+    const totalContactsPersonal = personalBook.contacts.reduce((total, contact) => total + 1, 0);
+    console.log("Total contacts in Personal Address Book:", totalContactsPersonal);
+
+    const totalContactsWork = workBook.contacts.reduce((total, contact) => total + 1, 0);
+    console.log("Total contacts in Work Address Book:", totalContactsWork);
+    console.log("Total number of contacts in address book:", totalContactsPersonal + totalContactsWork);
+
     //find contact by name if exists
     const updatedContact = personalBook.findContactByName("Rahul", "Kumar");
     if (updatedContact) {
         console.log("Updated contact details for:", updatedContact.firstName, updatedContact.lastName);
     } else {
         console.log("Contact not found for updating.");
-    }
-    const deletedContact = personalBook.findContactByName("Rohit", "Kumar");
-    if (!deletedContact) {
-        console.log("Confirming deletion: Contact 'Rohit Kumar' not found.");
     }
 } catch (error) {
     console.error(error.message);
