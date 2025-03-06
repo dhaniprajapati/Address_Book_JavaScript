@@ -1,4 +1,4 @@
-//UC3- Ability to create a New Address Book array and add new Contacts to it
+//UC4- to find existing contact person using their name and edit it
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -37,6 +37,24 @@ class AddressBook {
             console.log("Validation failed for:", this.name);
         }    
     }
+    //find contact by name
+    findContactByName(firstName, lastName) {
+        return this.contacts.find(contact => 
+            contact.firstName === firstName &&
+            contact.lastName === lastName
+        );
+    }
+    //edit contact details
+    editContact(firstName, lastName, updatedDetails) {
+        const contact = this.findContactByName(firstName, lastName);
+        if (contact) {
+            Object.assign(contact, updatedDetails);
+            console.log("Contact updated successfully.");
+        } else {
+            console.log("Contact not found.");
+        }
+    }
+
     //display contacts
     displayContacts() {
         if(this.contacts.length===0){
@@ -108,7 +126,7 @@ return state.length >= 4;
 }
 
 function validateZip(zip) {
-return /^\d{5}$/.test(zip);
+return /^\d{6}$/.test(zip);
 }
 
 function validatePhoneNumber(phoneNumber) {
@@ -118,32 +136,30 @@ return /^\d{10}$/.test(phoneNumber);
 function validateEmail(email) {
 return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 }
-//try catch block
+//try-catch block
 try {
+    //create address book manager
     const manager = new AddressBookManager();
-
-    //creating new Address Books
+    //create address books and add contacts
     manager.createAddressBook("Personal");
     manager.createAddressBook("Work");
-
-    //listing all available Address Books
     manager.listAddressBooks();
-
-    //creating contacts
-    const contact1 = new Contact("Rahul", "Kumar", "Kankarbagh", "Patna", "Bihar", "80020", "1234567890", "rahul@gmail.com");
-    const contact2 = new Contact("Rohit", "Kumar", "Main Road", "Ranchi", "Jharkhand", "83302", "5479434788", "rohit@gmail.com");
-
-    //adding contacts to Address Books
+    //add contacts to personal address book
     const personalBook = manager.getAddressBook("Personal");
-    if (personalBook) personalBook.addContact(contact1);
-
-    const workBook = manager.getAddressBook("Work");
-    if (workBook) workBook.addContact(contact2);
-
-    //display contacts in each Address Book
+    const contact1 = new Contact("Rahul", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rahul@gmail.com");
+    const contact2 = new Contact("Rohit", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "6734892109", "rohit@gmail.com");
+    personalBook.addContact(contact1);
+    personalBook.addContact(contact2);
+    //edit contact details
+    personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
     personalBook.displayContacts();
-    workBook.displayContacts();
-
+    //find contact by name if exists
+    const updatedContact = personalBook.findContactByName("Rahul", "Kumar");
+    if (updatedContact) {
+        console.log("Updated contact details for:", updatedContact.firstName, updatedContact.lastName);
+    } else {
+        console.log("Contact not found for updating.");
+    }
 } catch (error) {
-    console.error("Error:", error.message);
+    console.error(error.message);
 }
