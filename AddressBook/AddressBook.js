@@ -1,4 +1,4 @@
-//UC4- to find existing contact person using their name and edit it
+//UC4- to find existing contact person using their name and delete it from the array
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -54,7 +54,19 @@ class AddressBook {
             console.log("Contact not found.");
         }
     }
-
+    //delete contact
+    deleteContact(firstName, lastName) {
+        const contact = this.findContactByName(firstName, lastName);
+        if (contact) {
+            this.contacts = this.contacts.filter(contact => 
+                contact.firstName !== firstName &&
+                contact.lastName !== lastName
+            );
+            console.log("Contact deleted successfully.");
+        } else {
+            console.log("Contact not found.");
+        }
+    }
     //display contacts
     displayContacts() {
         if(this.contacts.length===0){
@@ -152,6 +164,9 @@ try {
     personalBook.addContact(contact2);
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
+    //delete contact
+    personalBook.deleteContact("Rohit", "Kumar");
+    //display contacts
     personalBook.displayContacts();
     //find contact by name if exists
     const updatedContact = personalBook.findContactByName("Rahul", "Kumar");
@@ -159,6 +174,10 @@ try {
         console.log("Updated contact details for:", updatedContact.firstName, updatedContact.lastName);
     } else {
         console.log("Contact not found for updating.");
+    }
+    const deletedContact = personalBook.findContactByName("Rohit", "Kumar");
+    if (!deletedContact) {
+        console.log("Confirming deletion: Contact 'Rohit Kumar' not found.");
     }
 } catch (error) {
     console.error(error.message);
