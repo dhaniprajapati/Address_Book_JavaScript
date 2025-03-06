@@ -1,4 +1,4 @@
-//UC9- to view specific contacts in city or state
+//UC10- get number of contact persons i.e count by city or state
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -167,11 +167,11 @@ try {
 
     //add contacts to personal address book
     const personalBook = manager.getAddressBook("Personal");
-    const contact1 = new Contact("Rahul", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rahul@gmail.com");
+    const contact1 = new Contact("Rahul", "Kumar", "Lalpur", "Ranchi", "Jharkhand", "800020", "1234567890", "rahul@gmail.com");
     const contact2 = new Contact("Rohit", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "6734892109", "rohit@gmail.com");
 
     const workBook = manager.getAddressBook("Work");
-    const contact3 = new Contact("Shreya", "Kumari", "Kankarbagh", "Patna", "Bihar", "800020", "7568320748", "shreya@gmail.com");
+    const contact3 = new Contact("Shreya", "Kumari", "Lalpur", "Ranchi", "Jharkhand", "800020", "7568320748", "shreya@gmail.com");
     const contact4 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
     const contact5 = new Contact("Rishi", "Kumar", "Kankarbagh", "Patna", "Bihar", "800020", "1234567890", "rishi@gmail.com");
 
@@ -181,18 +181,40 @@ try {
     workBook.addContact(contact3);
     workBook.addContact(contact4);
     workBook.addContact(contact5);
-    //search contact by city or state
-    const cityContacts = personalBook.contacts.filter(contact => contact.city === "Patna");
-    const stateContacts = personalBook.contacts.filter(contact => contact.state === "Bihar");
-    console.log("Detailed Contacts in Patna:");
-    cityContacts.forEach(contact => {
-        console.log("Name:"+contact.firstName + " " + contact.lastName);
-    });
+   //group by city 
+    const contactsByCity = personalBook.contacts.reduce((contacts, contact) => {
+        const city = contact.city;
+        if (!contacts[city]) {
+            contacts[city] = [];
+        }
+        contacts[city].push(contact);
+        return contacts;
+    }, {});
+    console.log("Contacts grouped by city:", contactsByCity);
 
-    console.log("Detailed Contacts in Bihar:");
-    stateContacts.forEach(contact => {
-        console.log("Name:"+contact.firstName + " " + contact.lastName);
-    });
+    //get total number of contacts grouped by city
+    const totalContactsByCity = Object.values(contactsByCity).reduce((total, contactArray) => total + contactArray.length, 0);
+    console.log("Total contacts grouped by city:", totalContactsByCity);
+
+    //group by state
+    const contactsByState = personalBook.contacts.reduce((contacts, contact) => {
+        const state = contact.state;
+        if (!contacts[state]) {
+            contacts[state] = [];
+        }
+        contacts[state].push(contact);
+        return contacts;
+    }, {});
+    console.log("Contacts grouped by state:", contactsByState);
+    
+    //get total number of contacts
+    const totalContactsByState = Object.values(contactsByState).reduce((total, contactArray) => total + contactArray.length, 0);
+    console.log("Total contacts grouped by state:", totalContactsByState);
+
+
+    //view contacts by location
+    const contactsByLocation = personalBook.viewContacts("Ranchi");
+    console.log("Contacts in Ranchi:", contactsByLocation);
 
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
