@@ -1,4 +1,4 @@
-//UC7- to find duplicate contact and remove it
+//UC8- to search person using city or state
 class Contact {
     //constructor
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
@@ -21,11 +21,11 @@ class AddressBook {
     //add contact
     addContact(contact) {
         console.log("Contact details received:", contact);
-        //check for duplicate contact
+        //check for duplicate contact and remove
         const existingContact = this.findContactByName(contact.firstName, contact.lastName);
         if (existingContact) {
-            console.log("Contact already exists.");
-            return;
+            console.log("Contact already exists. Removing the existing contact.");
+            this.contacts = this.contacts.filter(c => c !== existingContact);
         }
         //validate contact details
         if (
@@ -60,6 +60,14 @@ class AddressBook {
         } else {
             console.log("Contact not found.");
         }
+    }
+    //to find contact by city or state
+    findContactByCity(city) {
+        return this.contacts.filter(contact => contact.city === city);
+    }
+
+    findContactByState(state) {
+        return this.contacts.filter(contact => contact.state === state);
     }
     //display contacts
     displayContacts() {
@@ -168,15 +176,13 @@ try {
     workBook.addContact(contact3);
     workBook.addContact(contact4);
     workBook.addContact(contact5);
+    //search contact by city or state
+    const cityContacts = personalBook.contacts.filter(contact => contact.city === "Patna");
+    const stateContacts = personalBook.contacts.filter(contact => contact.state === "Bihar");
+    
+    console.log("Contacts in Patna:", cityContacts);
+    console.log("Contacts in Bihar:", stateContacts);
 
-    //remove duplicate contact
-    existingContact = workBook.findContactByName("Rishi", "Kumar");
-    if (existingContact) {
-        workBook.contacts.pop(existingContact);
-        console.log("Removed duplicate contact: Rishi Kumar");
-    } else {
-        console.log("No duplicate contact found for Rishi Kumar");
-    }
     //edit contact details
     personalBook.editContact("Rahul", "Kumar", {phoneNumber: "9876543210"});
 
